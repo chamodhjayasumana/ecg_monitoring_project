@@ -1,0 +1,8 @@
+streamlit
+wfdb
+heartpy
+numpy
+scipy
+tensorflow
+scikit-learn
+matplotlib
