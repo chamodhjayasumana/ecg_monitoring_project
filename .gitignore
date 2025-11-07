@@ -1,0 +1,13 @@
+# Python virtual environment
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Downloaded ECG data
+mitdb/
+
+# IDE settings
+.vscode/
+.idea/
