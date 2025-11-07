@@ -18,8 +18,3 @@ def build_model(input_shape):
     ])
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
     return model
-# This code defines a function to build a CNN-LSTM model for ECG signal classification.
-# The model consists of convolutional layers for feature extraction, followed by LSTM layers for sequence
-# learning, and dense layers for classification. It uses Batch Normalization and Dropout for regularization.
-# The model is compiled with the Adam optimizer and categorical crossentropy loss function, suitable for
-# multi-class classification tasks. The input shape is expected to be a 1D sequence, typically representing ECG signals.
