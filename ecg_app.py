@@ -19,7 +19,7 @@ st.set_page_config(layout="wide", page_title="Athlete ECG Monitor", page_icon="ð
 
 # Sidebar controls
 st.sidebar.title("âš™ Settings")
-record_id = st.sidebar.selectbox("Choose ECG Record", ['100', '101', '102'])
+record_id = st.sidebar.selectbox("Choose ECG Record", ['100', '101', '102', '103', '104', '105'])
 noise_level = st.sidebar.slider("Add Athlete Noise", 0.0, 0.2, 0.05, step=0.01)
 show_hrv = st.sidebar.checkbox("Show HRV Metrics", value=True)
 
