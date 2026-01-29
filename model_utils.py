@@ -2,7 +2,8 @@
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv1D, MaxPooling1D, LSTM, Dense, Dropout, BatchNormalization, Bidirectional
 
-def build_model(input_shape):
+
+def build_model(input_shape, num_classes=2):
     model = Sequential([
         Conv1D(64, 11, activation='relu', input_shape=input_shape),
         BatchNormalization(),
@@ -13,8 +14,15 @@ def build_model(input_shape):
         Bidirectional(LSTM(64, return_sequences=True)),
         Dropout(0.5),
         Bidirectional(LSTM(32)),
-        Dense(64, activation='relu'),
-        Dense(2, activation='softmax')
+        Dense(64, activation='relu')
     ])
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+    if num_classes == 1:
+        model.add(Dense(1, activation='sigmoid'))
+        loss = 'binary_crossentropy'
+    else:
+        model.add(Dense(num_classes, activation='softmax'))
+        loss = 'categorical_crossentropy'
+
+    model.compile(optimizer='adam', loss=loss, metrics=['accuracy'])
     return model

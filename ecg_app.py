@@ -59,7 +59,12 @@ if len(X) < 2:
 X = np.array(X)[..., np.newaxis]
 le = LabelEncoder()
 y_enc = le.fit_transform(y)
-y_cat = to_categorical(y_enc)
+num_classes = len(le.classes_)
+
+if num_classes == 1:
+    y_processed = y_enc.astype('float32')
+else:
+    y_processed = to_categorical(y_enc)
 
 class_counts = Counter(y_enc)
 st.sidebar.write("📊 Class counts:", {le.inverse_transform([k])[0]: v for k, v in class_counts.items()})
@@ -72,17 +77,23 @@ else:
     st.sidebar.warning("⚠ Stratified split disabled")
 
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y_cat, test_size=0.2, random_state=42, stratify=stratify_arg
+    X, y_processed, test_size=0.2, random_state=42, stratify=stratify_arg
 )
 
-model = build_model((X_train.shape[1], 1))
+model = build_model((X_train.shape[1], 1), num_classes=num_classes)
 with st.spinner("⏳ Training CNN-LSTM model..."):
     history = model.fit(X_train, y_train, epochs=5, batch_size=32, validation_data=(X_test, y_test), verbose=0)
 st.success("✅ Model training complete")
 
-y_true = np.argmax(y_test, axis=1)
-y_pred = model.predict(X_test)
-y_pred_labels = np.argmax(y_pred, axis=1)
+if num_classes == 1:
+    y_true = y_test.astype(int)
+    y_pred = model.predict(X_test).ravel()
+    y_pred_labels = (y_pred >= 0.5).astype(int)
+else:
+    y_true = np.argmax(y_test, axis=1)
+    y_pred = model.predict(X_test)
+    y_pred_labels = np.argmax(y_pred, axis=1)
+
 available_labels = unique_labels(y_true, y_pred_labels)
 available_names = le.inverse_transform(available_labels)
 
